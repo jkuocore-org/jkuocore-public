@@ -1,0 +1,24 @@
+name: Check secret on workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-secret:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check presence of org secret (no value printed)
+        env:
+          TEST_ORG_SECRET: ${{ secrets.TEST_ORG_SECRET }}
+        run: |
+          set -euo pipefail
+
+          # Do NOT print the secret. Only test presence/absence.
+          if [ -z "${TEST_ORG_SECRET:-}" ]; then
+            echo "SECRET_MISSING"
+            exit 0
+          else
+            echo "SECRET_PRESENT"
+            exit 0
+          fi
+        shell: bash
